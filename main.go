@@ -27,7 +27,7 @@ func main() {
 	r.GET("/api/data/:uuid", controller.GetData)
 	r.POST("/api/data", controller.AddData)
 	r.POST("/api/data/edit", controller.EditData)
-	r.DELETE("/api/data",controller.DeleteData)
+	r.DELETE("/api/data/:uuid",controller.DeleteData)
 
 	r.Run("localhost:8080")
 }

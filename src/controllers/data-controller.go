@@ -73,6 +73,7 @@ func (d *DataController) AddData(c *gin.Context){
 		c.IndentedJSON(http.StatusExpectationFailed, data.SendErr("couldn't add new row"))
 		return
 	}
+	c.IndentedJSON(http.StatusOK, data.SendErr("success"))
 }
 
 func (d *DataController) EditData(c *gin.Context){
@@ -87,20 +88,17 @@ func (d *DataController) EditData(c *gin.Context){
 	if result.Error != nil{
 		c.IndentedJSON(http.StatusBadRequest, data.SendErr("couldn't update new data"))
 	}
+	c.IndentedJSON(http.StatusOK, data.SendErr("success"))
 }
 
 func (d *DataController) DeleteData(c *gin.Context){
-	var deletedData data.Data
+	uuId := c.Param("uuid")
 
-	if err := c.BindJSON(&deletedData); err != nil{
-		c.IndentedJSON(http.StatusBadRequest, data.SendErr("cound't bind new data"))
-		return
-	}
-
-	result := d.Db.Where(&data.Data{Uuid: deletedData.Uuid}).Delete(&data.Data{})
+	result := d.Db.Where(&data.Data{Uuid: uuId}).Delete(&data.Data{})
 
 	if result.Error != nil{
-		c.IndentedJSON(http.StatusBadRequest, data.SendErr("couldn't delete data"))
+		c.IndentedJSON(http.StatusConflict, data.SendErr("couldn't delete data"))
 		return
 	}
+	c.IndentedJSON(http.StatusOK, data.SendErr("success"))
 }
